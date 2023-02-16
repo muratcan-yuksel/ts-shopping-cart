@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { useQuery } from "react-query";
+//components
+import Drawer from "@mui/material/Drawer";
+import LinearProgress from "@mui/material/LinearProgress";
+import Grid from "@mui/material/Grid";
+import Badge from "@mui/material/Badge";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+//styles
+import { Wrapper } from "./App.styles";
+//types
+export type CartItemType = {
+  id: number;
+  category: string;
+  description: string;
+  image: string;
+  price: number;
+  title: string;
+  amount: number;
+};
+//so in TS, we also create the type for the data we are fetching
+//we also specify that the data is an array of CartItemType because we get an array of objects from the API
+//FOR SOME REASON, we doN't have curly brackets...
+const getProducts = async (): Promise<CartItemType[]> =>
+  await (await fetch("https://fakestoreapi.com/products")).json();
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = () => {
+  const { data, isLoading, error } = useQuery<CartItemType[]>(
+    "products",
+    getProducts
   );
-}
+  console.log(data);
+  return <div>App</div>;
+};
 
 export default App;
